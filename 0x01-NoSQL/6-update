@@ -1,7 +1,4 @@
 // This script adds a new attribute to a document in the collection school
-db.school.update(
-  { "name": "Holberton school" },  // Query filter: find documents where "name" is "Holberton school"
-  { $set: { "address": "972 Mission street" } },  // Update operation: set "address" to "972 Mission street"
-  { multi: false, upsert: false }  // Options: multi=false (update a single document), upsert=false (do not insert if document not found)
-)
 
+db.school.update({ "name": "Holberton school" }, {$set: { "address" : "972 Mission street" }})
+db.school.find()
