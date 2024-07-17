@@ -2,10 +2,7 @@
 """This module implements a redis task"""
 import redis
 import uuid
-from typing import TypeVar
-
-
-T = TypeVar('T', str, bytes, int, float)
+from typing import Union
 
 
 class Cache:
@@ -16,7 +13,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def store(self, data: T) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores the provided data in the cache and returns a unique key.
 
