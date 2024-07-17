@@ -14,6 +14,7 @@ class Cache:
         Connects to the Redis server and initializes the cache object.
         """
         self._redis = redis.Redis()
+        self._redis.flushdb()
 
     def store(self, data: T) -> str:
         """
