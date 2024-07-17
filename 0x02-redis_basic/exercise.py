@@ -5,7 +5,7 @@ import uuid
 from typing import TypeVar
 
 
-T = TypeVar('T')
+T = TypeVar('T', str, bytes, int, float)
 
 
 class Cache:
