@@ -2,9 +2,19 @@
 """This module implements a redis task"""
 import redis
 import uuid
+import functools
 from typing import Union, Callable, Optional
 
 
+def count_calls(method: Callable) -> Callable:
+    """A decorator that counts the number of times a method is called."""
+    @functools.wraps(method)
+    def wrapper(self, *args, **kwargs):
+        # Increment the count for this method
+        self._redis.incr(method.__qualname__)
+        # Call the original method
+        return method(self, *args, **kwargs)
+    return wrapper
 
 class Cache:
     def __init__(self):
@@ -14,6 +24,7 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
+    @count_calls
     def store(self, data: Union[str, bytes, int, float]) -> str:
         """
         Stores the provided data in the cache and returns a unique key.
