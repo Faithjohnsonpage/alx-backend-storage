@@ -2,13 +2,13 @@
 """This module implements a redis task"""
 import redis
 import uuid
-import functools
+from functools import wraps
 from typing import Union, Callable, Optional
 
 
 def count_calls(method: Callable) -> Callable:
     """A decorator that counts the number of times a method is called."""
-    @functools.wraps(method)
+    @wraps(method)
     def wrapper(self, *args, **kwargs):
         # Increment the count for this method
         self._redis.incr(method.__qualname__)
