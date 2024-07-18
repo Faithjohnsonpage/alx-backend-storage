@@ -121,4 +121,6 @@ def replay(method: Callable) -> None:
     inputs = self._redis.lrange(f"{key}:inputs", 0, -1)
     outputs = self._redis.lrange(f"{key}:outputs", 0, -1)
     for input_args, output in zip(inputs, outputs):
-        print(f"{key}(*{input_args.decode('utf-8')}) -> {output.decode('utf-8')}")
+        args = input_args.decode('utf-8')
+        result = output.decode('utf-8')
+        print(f"{key}(*{args}) -> {result}")
