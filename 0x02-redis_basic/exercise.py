@@ -110,3 +110,15 @@ class Cache:
             None if the key does not exist.
         """
         return self.get(key, int)
+
+
+def replay(method: Callable) -> None:
+    """Displays the history of calls of a particular function."""
+    self = method.__self__
+    key = method.__qualname__
+    call_count = self._redis.get(key).decode('utf-8')
+    print(f"{key} was called {call_count} times:")
+    inputs = self._redis.lrange(f"{key}:inputs", 0, -1)
+    outputs = self._redis.lrange(f"{key}:outputs", 0, -1)
+    for input_args, output in zip(inputs, outputs):
+        print(f"{key}(*{input_args.decode('utf-8')}) -> {output.decode('utf-8')}")
