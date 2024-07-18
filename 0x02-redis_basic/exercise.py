@@ -2,7 +2,8 @@
 """This module implements a redis task"""
 import redis
 import uuid
-from typing import Union
+from typing import Union, Callable, Optional
+
 
 
 class Cache:
@@ -26,3 +27,55 @@ class Cache:
         key = str(uuid.uuid4())
         self._redis.set(key, data)
         return key
+
+    def get(self, key:
+            str, fn: Optional[Callable] = None
+            ) -> Optional[Union[str, int, float, bytes]]:
+        """
+        Retrieves the data stored at the specified key and applies the
+        conversion function if provided.
+
+        Args:
+            key: The key of the data to retrieve.
+            fn: An optional callable used to convert the data back to the
+                desired format.
+
+        Returns:
+            The data stored at the key, converted if a conversion function is
+            provided, or None if the key does not exist.
+        """
+        data = self._redis.get(key)
+        if data is None:
+            return None
+
+        if fn is not None:
+            return fn(data)
+        return data
+
+    def get_str(self, key: str) -> Optional[str]:
+        """
+        Retrieves the data stored at the specified key and converts
+        it to a string.
+
+        Args:
+            key: The key of the data to retrieve.
+
+        Returns:
+            The data stored at the key, converted to a string, or
+            None if the key does not exist.
+        """
+        return self.get(key, lambda d: d.decode('utf-8'))
+
+    def get_int(self, key: str) -> Optional[int]:
+        """
+        Retrieves the data stored at the specified key and converts
+        it to an integer.
+
+        Args:
+            key: The key of the data to retrieve.
+
+        Returns:
+            The data stored at the key, converted to an integer, or
+            None if the key does not exist.
+        """
+        return self.get(key, int)
